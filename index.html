@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="./style.css">
+<title>Biz English Lesson</title>
+</head>
+<body>
+
+<!-- タイトル -->
+<header class="head">How Do You Say in English?</header>
+
+
+<!-- コンテンツ表示画面 -->
+<div class="content">
+    <div id="enter">
+        <div>
+            <button id="start">スタート</button>
+           次の日本語を英語に翻訳してください: <input type="text" id="Jtext" size="40">
+        </div>
+        <div>
+            回答: <textarea name="" id="Etext" cols="50" rows="3"></textarea>
+            <button id="send">送信</button>
+        </div>
+    </div>
+    <div id="output" style="overflow:auto; height:500px;"></div>
+</div>
+
+
+<!-- JQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- JQuery -->
+
+
+<!--** 以下Firebase **-->
+
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+    import { getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved }
+        from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.6.0/firebase-database.min.js";
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBmP9o67S8g6FiBkYTcqcrhLCckmyKnwRI",
+    //   消す！！！↑
+      authDomain: "g-s-trial-app.firebaseapp.com",
+      projectId: "g-s-trial-app",
+      storageBucket: "g-s-trial-app.appspot.com",
+      messagingSenderId: "799413378945",
+      appId: "1:799413378945:web:f814f7bb25b71ded4fd280"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+
+    const db = getDatabase(app);
+    const dbRef = ref(db, "chat");
+
+    // おみくじ↓
+   const Jlist = ["私の上司は今機嫌が悪いです","なんとかします", "年齢は関係ない", "こんなことを言いたくはないのですが、、", "ちょっと一言よろしいでしょうか？"];
+   $("#start").on("click", function(){
+    const randomNum = Math.floor(Math.random() * 5);
+    $("#Jtext").val(Jlist[randomNum]);
+   });
+
+
+// ユーザー送信↓
+    
+    $("#Etext").on("keydown",function(e){
+        if(event.ctrlKey){ 
+            if ( e.which == 13 ) {
+		// ここに処理を記述
+        const Jtext =$("#Jtext").val();
+        const Etext =$("#Etext").val();
+        const msg = {
+            Jtext: Jtext,
+            Etext: Etext
+        }
+        if(Jtext == Jlist[0]){
+        const answer = "Answer: He is in a bad mood right now.";
+        console.log(answer);
+        set(push(dbRef), msg);
+        set(push(dbRef), answer);
+		return false;
+    }else if (Jtext == Jlist[1]){
+        const answer = "Answer: I'll figure it out.";
+        console.log(answer);
+        set(push(dbRef), msg);
+        set(push(dbRef), answer);
+		return false;
+    }else if (Jtext == Jlist[2]){
+        const answer = "Answer: Age makes no difference.";
+        console.log(answer);
+        set(push(dbRef), msg);
+        set(push(dbRef), answer);
+		return false;
+    }else if (Jtext == Jlist[3]){
+        const answer = "Answer: I don't want to say this, but...";
+        console.log(answer);
+        set(push(dbRef), msg);
+        set(push(dbRef), answer);
+		return false;
+    }else if (Jtext == Jlist[4]){
+        const answer = "Answer: Could I just say something?";
+        console.log(answer);
+        set(push(dbRef), msg);
+        set(push(dbRef), answer);
+		return false;
+    };
+        $("#Jtext").val("");
+        $("#Etext").val("");
+        }
+        }       
+	});
+
+    $("#send").on("click",function(){
+        const Jtext =$("#Jtext").val();
+        const Etext =$("#Etext").val();
+        const msg = {
+            Jtext: Jtext,
+            Etext: Etext
+        }
+        if(Jtext == Jlist[0]){
+        const answer = "Answer: He is in a bad mood right now.";
+        console.log(answer);
+        set(push(dbRef), msg);
+        set(push(dbRef), answer);
+		return false;
+    }else if (Jtext == Jlist[1]){
+        const answer = "Answer: I'll figure it out.";
+        console.log(answer);
+        set(push(dbRef), msg);
+        set(push(dbRef), answer);
+		return false;
+    }else if (Jtext == Jlist[2]){
+        const answer = "Answer: Age makes no difference.";
+        console.log(answer);
+        set(push(dbRef), msg);
+        set(push(dbRef), answer);
+		return false;
+    }else if (Jtext == Jlist[3]){
+        const answer = "Answer: I don't want to say this, but...";
+        console.log(answer);
+        set(push(dbRef), msg);
+        set(push(dbRef), answer);
+		return false;
+    }else if (Jtext == Jlist[4]){
+        const answer = "Answer: Could I just say something?";
+        console.log(answer);
+        set(push(dbRef), msg);
+        set(push(dbRef), answer);
+		return false;
+    };
+        $("#Jtext").val("");
+        $("#Etext").val("");   
+	});
+
+    // 反映
+
+    onChildAdded(dbRef, function (data) {
+        const msg = data.val();
+        const key = data.key;
+        if (msg == "[object Object]"){
+        let h = "<div class='user_chat'>";
+        h += msg.Jtext;
+        h += "<br>";
+        h += msg.Etext;
+        h += "</div>";
+        h += "<button class='remove' id='";
+        h += key;
+        h += "'>削除</button>";
+        $("#output").append(h); 
+        }else {
+        setTimeout(function(){
+        let h = "<div class='answer_chat'>";
+        h += msg;
+        h += "</div>";
+        h += "<button class='remove' id='";
+        h += key;
+        h += "'>削除</button>";
+        $("#output").append(h); 
+        },2000);
+        };
+    });
+
+  
+//    削除↓
+    $(document).on("click",".remove",function(){
+        alert("Are you sure?!")
+        remove(ref(db, "chat/" +$(this).attr("id")));
+        $(this).parent().remove();
+    });
+
+
+  </script>
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,39 @@
+/* 全体 */
+body{
+    background-image: url(./imgs/background.jpg);
+    background-color: rgba(255, 255, 255, 0.7);
+    background-blend-mode: lighten;
+    background-size: cover;
+}
+
+/* タイトル */
+.head{
+    font-size: 30px;
+    text-align: center;
+}
+
+/* コンテンツ */
+.content{
+    display: flex;
+}
+
+#enter{
+    width: 30%;
+}
+
+#output{
+    width: 70%;
+    text-align: left;
+    padding: 50px;
+}
+
+/* chat */
+
+.user_chat{
+    background-color: mistyrose;
+}
+
+.answer_chat{
+    background-color:moccasin ;
+    color: red;
+}
